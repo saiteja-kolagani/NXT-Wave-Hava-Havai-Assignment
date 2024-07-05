@@ -5,11 +5,11 @@ const Country = require('./models/country');
 const xlsx = require('xlsx');
 const path = require('path');
 
-// Correct the file path
+
 const filePath = path.join(__dirname, 'Database (1).xlsx');
 const workbook = xlsx.readFile(filePath);
 
-// Parse each sheet
+
 const airportData = xlsx.utils.sheet_to_json(workbook.Sheets['airport']);
 const cityData = xlsx.utils.sheet_to_json(workbook.Sheets['city']);
 const countryData = xlsx.utils.sheet_to_json(workbook.Sheets['country']);
@@ -30,7 +30,7 @@ sequelize.sync({ force: true }).then(async () => {
     const cityIds = cityData.map(city => city.id);
     const invalidAirports = airportData.filter(airport => !cityIds.includes(airport.city_id));
     if (invalidAirports.length > 0) {
-      console.error('Invalid city_ids in airport data:', invalidAirports);
+      console.error('Invalid city_ids in airport data:', invalidAirports.map(airport => airport.city_id));
       throw new Error('Invalid city_ids in airport data');
     }
 
